@@ -1,0 +1,87 @@
+[data-theme="dark"] {
+    --bg-container: #1e1e1e;
+    --white-color: white;
+    --light-orange-color: #ffb650;
+    --hover-color: #ffb650;
+  }
+ 
+[data-theme="light"] {
+    --bg-container: white;
+    --white-color: black;
+    --light-orange-color: black;
+    --hover-color: grey;
+}
+
+body {
+    background-color: var(--bg-container);
+    color: var(--light-orange-color);
+    font-family: "Courier New", Courier, monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Styling for the navbar */
+.navbar {
+    display: flex;
+    list-style-type: none;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar li {
+    margin: 0 15px;
+  }
+  
+.navbar a {
+color: var(--white-color);
+text-decoration: none;
+font-weight: bold;
+}
+  
+.navbar a:hover {
+color: var(--hover-color);
+text-decoration: underline;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: var(--white-color);
+    display: flex;
+    align-items: center;
+}
+
+.rss-icon {
+    margin-left: 8px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 16px;
+}
+
+li a {
+    color: var(--light-orange-color);
+    font-weight: bold;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+li a:hover {
+    text-decoration: underline;
+    color: var(--hover-color);
+}
+
+li p {
+    color: #888;
+    font-size: 14px;
+    margin: 4px 0 0;
+}

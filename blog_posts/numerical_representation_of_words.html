@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numerical Representation of Words - Bag of Words</title>
+</head>
+<body>
+    <h1>Numerical Representation of Words — Bag of Words</h1>
+    <p>You may ask yourself these questions: How do computers process language? How does a spell checker on a mobile device detect that a word is spelled incorrectly? How does the auto-fill feature predict the next word you are about to type with such accuracy? The answer to all of these questions lies in Natural Language Processing (NLP).</p>
+
+    <p>However, computers only understand numbers—1’s and 0’s. Therefore, one of the first steps in NLP involves converting words into numerical representations. There are various methods to achieve this, but one common approach is to use the frequency of words in a document.</p>
+
+    <h2>Example</h2>
+    <p>Consider the following sentence:</p>
+    <blockquote>"The quick brown fox jumps over the lazy dog"</blockquote>
+    <p>Frequency count:</p>
+    <ul>
+        <li>the: 2</li>
+        <li>quick: 1</li>
+        <li>brown: 1</li>
+        <li>fox: 1</li>
+        <li>jumps: 1</li>
+        <li>over: 1</li>
+        <li>lazy: 1</li>
+        <li>dog: 1</li>
+    </ul>
+
+    <h2>Corpus and Vocabulary in NLP</h2>
+    <p>In the context of NLP, a "corpus" refers to a set of text data used for analysis and training. A "vocabulary" is a collection of distinct words (known as "tokens") that appear in a corpus. These tokens are crucial for creating numerical representations of the text.</p>
+
+    <p>Now that you're familiar with some essential NLP terms, let's dive a bit deeper into the preprocessing activities involved in preparing text data.</p>
+
+    <h2>Preprocessing and Tokenization</h2>
+    <p>Before using word frequencies to represent words numerically, there are preprocessing steps that need to be taken. These steps help create tokens from the text. If you examine any text, say a blog post or a news article, you'll notice that certain words carry little meaning on their own and can be removed without changing the overall understanding of the sentence. Words like "and," "is," "to," and "the" are examples of such words. These are referred to as "stopwords."</p>
+
+    <h3>Example: Removing Stopwords</h3>
+    <p>Consider the following sentence:</p>
+    <blockquote>"The quick brown fox jumps over the lazy dog"</blockquote>
+    <p>If we remove the stopwords "the" and "over," we get:</p>
+    <blockquote>"Quick brown fox jumps lazy dog"</blockquote>
+    <p>As you can see, the key content of the sentence remains intact, even without the stopwords. The remaining words—"quick," "brown," "fox," "jumps," "lazy," and "dog"—still convey the meaning of the sentence. Removing stopwords can reduce the computational effort required to analyze text. For example, counting word frequencies in a document with 25,000 words would be much faster if we exclude common stopwords like "the" or "is."</p>
+
+    <h3>When Not to Remove Stopwords</h3>
+    <p>Although stopwords generally carry little information, they can still provide important relational context in some situations.</p>
+
+    <p>Consider these two sentences:</p>
+    <ol>
+        <li>Mark reported to the CEO</li>
+        <li>Suzanne reported as the CEO to the board</li>
+    </ol>
+    <p>Removing stopwords results in the following sentences:</p>
+    <ol>
+        <li>Mark reported CEO</li>
+        <li>Suzanne reported CEO board</li>
+    </ol>
+    <p>In both cases, the text suggests that both Mark and Suzanne reported to the CEO. However, in the original sentences, "Mark" could have been an assistant to the CEO, while "Suzanne" was the CEO reporting to the board. This example shows that sometimes removing stopwords might eliminate crucial information about the roles and relationships between entities.</p>
+
+    <p>Therefore, it's important to understand the context of the text you are working with before deciding whether to remove stopwords. If you have sufficient computational resources, you may choose not to remove them at all.</p>
+
+    <h2>Stemming and Lemmatization</h2>
+    <p>Another preprocessing step in NLP is reducing words to their base forms. This can be done using two techniques: stemming and lemmatization.</p>
+
+    <h3>Stemming</h3>
+    <p>Stemming involves reducing a word to its root form by removing suffixes. The goal is to obtain a "stem," which may not be a valid word but serves as a representation of related words. For example:</p>
+    <ul>
+        <li>running → run</li>
+        <li>faster → fast</li>
+    </ul>
+    <p>Stemming can be very useful in keyword search or information retrieval, it allows you to search for "houses in China", and you will get results that use both the word house and houses</p>
+
+    <h3>Lemmatization</h3>
+    <p>Lemmatization is a more refined process. It reduces a word to its base or dictionary form, known as the "lemma," by considering its meaning and using vocabulary and grammar rules.</p>
+    <p>For example, consider the sentence:</p>
+    <blockquote>"She is better than him at playing chess."</blockquote>
+    <p>If we apply stemming, the word "better" would be reduced to "bet," which is incorrect in this context. "Bet" refers to a wager, which has a completely different meaning. However, lemmatization would recognize "better" as an adjective and reduce it to "good," which is the correct form for comparison (i.e., "She is good at playing chess").</p>
+
+    <p>Based on these examples, I would choose lemmatization over stemming for text preprocessing. However, each technique has its advantages, and the choice depends on the task at hand.</p>
+
+    <h3>Stemmers vs. Lemmatizers</h3>
+    <p>Stemmers are typically faster and require simpler code and datasets. However, they often make more mistakes, chopping off parts of words in ways that alter the meaning of the text. While both stemmers and lemmatizers reduce the number of unique words in a text, lemmatizers do a better job of maintaining meaning by considering how each word is used in context.</p>
+
+    <p>Some experts suggest avoiding stemming and lemmatization unless you're working with a small dataset containing specific word usages or capitalizations. With the variety of NLP datasets available today, this is rarely the case for English documents. However, for non-English languages, lemmatization might still prove useful.</p>
+
+    <h3>Tokens</h3>
+    <p>After applying these preprocessing steps, the words you obtain are known as "tokens." Thereafter you can perform a frequency count to get a numerical representation of the text</p>
+
+    <h2>Bag of Words</h2>
+    <p>The Bag of Words (BoW) model is a simple and widely used approach in Natural Language Processing (NLP) for text representation.</p>
+    <p>For example, if you have the following data:</p>
+    <pre>
+        "This is the first document.",
+        "This document is the second document.",
+        "And this is the third one.",
+        "Is this the first document?"
+    </pre>
+
+    <h4>After Preprocessing the Bag of Words (BoW) matrix is:</h4>
+    <table border="1">
+        <thead>
+            <tr>
+                <th></th>
+                <th>document</th>
+                <th>first</th>
+                <th>one</th>
+                <th>second</th>
+                <th>third</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>doc1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>doc2</td>
+                <td>2</td>
+                <td>0</td>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>doc3</td>
+                <td>0</td>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>doc4</td>
+                <td>1</td>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>CODE</h2>
+    <p>Link to code: <a href="https://github.com/Tony-Ale/Classical-ML-Algorithms/blob/master/bag_of_words/bag_of_words.py">github link</a></p>
+    <h3>Functions:</h3>
+    <ul>
+        <li><b>is_data_downloaded()</b>: Checks if necessary resources (stopwords and WordNet) are available for lemmatization and stopword removal.</li>
+        <li><b>remove_stop_words()</b>: Removes common stopwords from a list of words.</li>
+        <li><b>preprocess_text()</b>: Preprocesses a given text by removing punctuation, converting to lowercase, removing stopwords, and performing lemmatization.</li>
+        <li><b>get_unique_words()</b>: Extracts unique words from a dataset of text.</li>
+        <li><b>bow()</b>: Builds the Bag of Words matrix from the dataset, with each word in the vocabulary represented by a column and the frequency of that word in each document represented by a row.</li>
+    </ul>
+
+    <h2>Code:</h2>
+    <pre>
+from collections import Counter
+import pandas as pd
+import numpy as np
+import nltk
+import string
+from nltk import WordNetLemmatizer
+from nltk.corpus import stopwords
+from typing import Iterable
+
+def is_data_downloaded():
+    """Checks if the stopwords and wordnet (for lemmatization) are downloaded"""
+
+    for resource in ["wordnet", "stopwords"]:
+
+        try:
+            nltk.data.find(f'corpora/{resource}.zip')
+        except LookupError:
+            nltk.download(resource)
+
+def remove_stop_words(split_text:list[str]):
+    
+    stop_words = stopwords.words("english")
+
+    split_text_wihtout_stopwords = list()
+
+    for word in split_text:
+        if word.lower() not in stop_words:
+            split_text_wihtout_stopwords.append(word)
+    return split_text_wihtout_stopwords
+
+def preprocess_text(sentence:str):
+    lemmatizer = WordNetLemmatizer()
+
+    split_sentence = sentence.translate(str.maketrans("", "", string.punctuation))
+    split_sentence = split_sentence.lower().split()
+    split_sentence = remove_stop_words(split_sentence)
+
+    split_sentence = [lemmatizer.lemmatize(word) for word in split_sentence]
+
+    return split_sentence
+
+
+def get_unique_words(dataset:Iterable[str]):
+    if isinstance(dataset, str):
+        dataset = [dataset]
+        
+    unique_words = set()
+    for text in dataset:
+        split_text = preprocess_text(text)
+        unique_words.update(split_text)
+    return unique_words
+
+ 
+def bow(data:Iterable[str]):
+
+    # download neccessary data if not already downloaded
+    is_data_downloaded()
+
+    # map words in vocab to indices
+    vocab = get_unique_words(data)
+    vocab = sorted(vocab)
+    vocab_index = {word:i for i, word in enumerate(vocab)}
+
+    # initialize numpy array (preallocation)
+    col = len(vocab)
+    row = len(data)
+    word_count = np.zeros(shape=(row, col), dtype=int)
+
+    for idx, sentence in enumerate(data):
+
+        split_sentence = preprocess_text(sentence)
+        counted_words = Counter(split_sentence)
+
+        for word, count in counted_words.items():
+            word_count[idx, vocab_index[word]] = count
+
+
+    bag_of_words = pd.DataFrame(data=word_count, columns=vocab)
+
+    return bag_of_words
+
+
+if __name__ == "__main__":
+    data = [
+    "This is the first document.",
+    "This document is the second document.",
+    "And this is the third one.",
+    "Is this the first document?"
+    ]
+    bag_of_words = bow(data)
+    print(bag_of_words)
+</body>
+</html>
