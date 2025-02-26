@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Notes</title>
+    <link rel="stylesheet" href="blog_content.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        window.MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']]
+          }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div id="blog-content"></div> 
+    <script>
+        function getQueryParam(name) {
+            const params = new URLSearchParams(window.location.search);
+            return params.get(name);
+        }
+
+        async function loadMarkdown(filename) {
+            fetch(`${filename}`)
+            .then(response => response.text())
+            .then(markdown => {
+                document.getElementById('blog-content').innerHTML = marked.parse(markdown);
+                if (window.MathJax) {
+                    console.log("math jax rendering")
+                    MathJax.typeset(); // Process LaTeX math expressions
+                } 
+            })   
+        }
+
+        async function loadHtml(filename){
+            fetch(`${filename}`)
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('blog-content').innerHTML = html;
+            })
+        }
+
+        const filename = getQueryParam('post')
+        filenameSplit = filename.split(".");
+        if (filenameSplit.length > 1){
+            // update title 
+            document.title = filenameSplit[0]
+
+            // load file
+            fileExt = filenameSplit.pop();
+            if (fileExt.toLowerCase() === "html"){
+                loadHtml(filename);
+            }else if(fileExt.toLowerCase() === "md"){
+                loadMarkdown(filename);
+            }else{
+                throw new Error("Unsupported file extension");
+            }
+        }else{
+            throw new Error("Invalid file extension, could not load file");
+        }
+    </script>
+</body>
+</html>
