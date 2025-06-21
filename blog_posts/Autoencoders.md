@@ -60,9 +60,15 @@ Let’s go right ahead and build an autoencoder, while I explain step-by-step.
 ---
 
 ## CODE AND EXPLANATION
-You can find the code in this notebook:
 
-👉 [View on GitHub](https://github.com/Tony-Ale/Notebooks/blob/main/Autoencoders.ipynb)
+You can explore the notebook here:
+
+- 📘 <a href="https://github.com/Tony-Ale/Notebooks/blob/main/Autoencoders.ipynb" target="_blank">View on GitHub</a>  
+- 🚀 <a href="https://colab.research.google.com/github/Tony-Ale/Notebooks/blob/main/Autoencoders.ipynb" target="_blank">Open in Colab</a>
+
+---
+
+### First of all load the dataset 
 
 ```python
 # =======================
@@ -91,7 +97,9 @@ def get_mnist_loaders(batch_size=128):
   return train_loader, test_loader
 
 ```
+---
 
+### Write helper code to visualize data set
 
 ```python
 # =======================
@@ -131,7 +139,9 @@ visualize_batch()
     
 ![png](images/converted_notebook.ipynb_files/converted_notebook.ipynb_2_1.png)
     
+---
 
+### Set up the model architecture
 
 
 ```python
@@ -171,12 +181,17 @@ class Autoencoder(nn.Module):
       return out
 ```
 
+---
 
+### Run the dataset loader function
 ```python
 # Load data
 train_loader, test_loader = get_mnist_loaders()
 ```
 
+---
+
+### Initialize the model
 
 ```python
 # Initialize model
@@ -203,7 +218,9 @@ model.to(device)
     )
 
 
+---
 
+### Set up loss function
 
 ```python
 # =======================
@@ -214,7 +231,9 @@ model.to(device)
 criterion = nn.BCELoss() # Measures reconstruction loss between predicted and actual pixel values
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 ```
+---
 
+### Train the model
 
 ```python
 # =======================
@@ -253,7 +272,9 @@ for epoch in range(epochs):
     Epoch 9/10, Loss: 0.0879
     Epoch 10/10, Loss: 0.0868
 
+---
 
+### Test the model
 
 ```python
 # Get a small batch
@@ -289,7 +310,9 @@ plt.show()
 ![png](images/converted_notebook.ipynb_files/converted_notebook.ipynb_8_0.png)
     
 
+---
 
+### Visualize latent space
 
 ```python
 from sklearn.decomposition import PCA
