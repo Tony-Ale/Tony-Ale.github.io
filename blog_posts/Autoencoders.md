@@ -60,6 +60,9 @@ Let’s go right ahead and build an autoencoder, while I explain step-by-step.
 ---
 
 ## CODE AND EXPLANATION
+You can find the code in this notebook:
+
+👉 [View on GitHub](https://github.com/Tony-Ale/Notebooks/blob/main/Autoencoders.ipynb)
 
 ```python
 # =======================
