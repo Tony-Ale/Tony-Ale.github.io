@@ -53,7 +53,7 @@ At its core, an autoencoder is made up of two main components:
 
 This pipeline takes an input, compresses it to a smaller hidden representation, and then reconstructs it back to its original form.
 
-![png](images/converted_notebook.ipynb_files/autoencoder-architecture.png)
+![png](images/autoencoder_images/autoencoder-architecture.png)
 
 Let’s go right ahead and build an autoencoder, while I explain step-by-step.
 
@@ -137,7 +137,7 @@ visualize_batch()
 
 
     
-![png](images/converted_notebook.ipynb_files/converted_notebook.ipynb_2_1.png)
+![png](images/autoencoder_images/converted_notebook.ipynb_2_1.png)
     
 ---
 
@@ -307,7 +307,7 @@ plt.show()
 
 
     
-![png](images/converted_notebook.ipynb_files/converted_notebook.ipynb_8_0.png)
+![png](images/autoencoder_images/converted_notebook.ipynb_8_0.png)
     
 
 ---
@@ -349,7 +349,7 @@ plt.show()
 
 
     
-![png](images/converted_notebook.ipynb_files/converted_notebook.ipynb_9_0.png)
+![png](images/autoencoder_images/converted_notebook.ipynb_9_0.png)
     
 
 
