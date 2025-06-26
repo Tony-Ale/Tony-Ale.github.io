@@ -31,7 +31,8 @@
                 document.getElementById('blog-content').innerHTML = marked.parse(markdown);
                 if (window.MathJax) {
                     console.log("math jax rendering")
-                    MathJax.typeset(); // Process LaTeX math expressions
+                    //MathJax.typeset(); // Process LaTeX math expressions
+                    MathJax.typesetPromise().catch(err => console.error("MathJax failed:", err));
                 } 
             })   
         }
