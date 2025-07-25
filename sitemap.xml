@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Blog listing page -->
+  <url>
+    <loc>https://tony-ale.github.io/blog.html</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Individual blog posts -->
+  <url>
+    <loc>https://tony-ale.github.io/blog_posts/post.html?post=numerical_representation_of_words.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tony-ale.github.io/blog_posts/post.html?post=Induction_trees_paper.md</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tony-ale.github.io/blog_posts/post.html?post=Autoencoders.md</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tony-ale.github.io/blog_posts/post.html?post=Denoising_Autoencoders.md</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tony-ale.github.io/blog_posts/post.html?post=Sparse_Autoencoders.md</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tony-ale.github.io/blog_posts/post.html?post=Variational_Autoencoders.md</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tony-ale.github.io/blog_posts/post.html?post=RNN.md</loc>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>
