@@ -4,6 +4,8 @@ You’ve probably seen how a basic Recurrent Neural Network (RNN) works, taking 
 
 The Gated Recurrent Unit, or GRU. GRUs are like RNNs but smarter. They know when to remember, when to forget, and when to update their memory. Think of them as memory-enhanced RNNs, designed to hold onto important information just long enough to make better predictions.
 
+> 📚 *If you're new to this topic, you might want to check out my post on [Recurrent Neural Networks (RNNs)](https://tony-ale.github.io/blog_posts/post.html?post=RNN.md) first, it lays the foundation for what we’re about to explore.*
+
 ---
 
 ## From RNNs to GRUs: What’s the Problem?
