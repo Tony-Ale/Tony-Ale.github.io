@@ -4,6 +4,8 @@ In the world of deep learning, LSTMs (Long Short-Term Memory units) are one of t
 
 In a previous post, we talked about GRUs (Gated Recurrent Units), which are already pretty smart. But now we’re diving into something even more powerful: LSTMs. Buckle up we’re going to break it down simply and visually so that even if you’re new to this, it’ll stick.
 
+> 📚 *If you're new to this topic, you might want to check out my post on [Recurrent Neural Networks (RNNs)](https://tony-ale.github.io/blog_posts/post.html?post=RNN.md) first, it lays the foundation for what we’re about to explore.*
+
 ---
 
 ## Why Do We Need LSTMs?
