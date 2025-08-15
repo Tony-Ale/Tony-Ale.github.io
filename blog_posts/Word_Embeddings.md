@@ -6,6 +6,7 @@ One of the core breakthroughs in NLP is something called word embeddings a way t
 > *Man is to Woman as King is to Queen.*
 
 Sounds magical, right? let's go a bit deeper.
+
 ---
 
 ## **How We Used to Represent Words**
