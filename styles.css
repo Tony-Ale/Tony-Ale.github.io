@@ -20,43 +20,45 @@
 
 /* General Reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Courier New", Courier, monospace;
-    color: var(--main-color);
-  }
-  
-  /* Body Style */
-  body {
-    background-color: var(--bg-color);
-    line-height: 1.6;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    flex-direction: column;
-  }
-  
-  /* Container */
-  .container {
-    max-width: 800px;
-    padding: 20px;
-    background: var(--bg-container);
-    border-radius: 10px;
-    box-shadow: 0 0 15px var(--bg-shadow);
-  }
-  
-  /* Header */
-  h1, h2, p {
-    text-align: center;
-  }
-  
-  h1 {
-    font-size: 2.5em;
-    margin-bottom: 10px;
-    color: var(--green-color);
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Courier New", Courier, monospace;
+  color: var(--main-color);
+}
+
+/* Body Style */
+body {
+  background-color: var(--bg-color);
+  line-height: 1.6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+/* Container */
+.container {
+  max-width: 800px;
+  padding: 20px;
+  background: var(--bg-container);
+  border-radius: 10px;
+  box-shadow: 0 0 15px var(--bg-shadow);
+}
+
+/* Header */
+h1,
+h2,
+p {
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+  color: var(--green-color);
+}
 
 /* Styling for the navbar */
 .navbar {
@@ -87,7 +89,7 @@ hr {
   border-top: 1px solid;
   margin: 10px 0;
 }
-  
+
 /* Section Styling */
 section {
   margin: 20px 0;
@@ -112,11 +114,11 @@ section {
   font-size: 1.05em;
 }
 
-#projects a{
+#projects a {
   text-decoration: none;
 }
 
-#projects a:hover{
+#projects a:hover {
   color: var(--orange-color);
 }
 
@@ -131,11 +133,11 @@ section {
   color: var(--orange-color);
 }
 
-#other-posts{
+#other-posts {
   text-align: left;
 }
 
-#other-posts a{
+#other-posts a {
   color: var(--white-color);
 }
 
@@ -150,4 +152,3 @@ footer {
 a {
   transition: color 0.3s ease;
 }
-  
