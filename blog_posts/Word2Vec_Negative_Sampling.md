@@ -335,3 +335,404 @@ where:
 * For rare words (*France*, *quantum*), $f(w_i)$ is small → discard probability $P(w_i)$ is close to 0 → they are almost always kept.
 
 This way, the model learns more from meaningful co-occurrences rather than being overwhelmed by high-frequency, low-information words.
+
+## CODE AND EXPLANATION
+
+You can explore the notebook here:
+
+- 📘 <a href="https://github.com/Tony-Ale/Notebooks/blob/main/Word2Vec_Negative_Sampling.ipynb" target="_blank">View on GitHub</a>  
+- 🚀 <a href="https://colab.research.google.com/github/Tony-Ale/Notebooks/blob/main/Word2Vec_Negative_Sampling.ipynb" target="_blank">Open in Colab</a>
+
+
+---
+
+### Download the dataset
+
+```python
+import os
+import zipfile
+import urllib.request
+
+# Download the dataset
+url = 'http://mattmahoney.net/dc/text8.zip'
+filename = 'text8.zip'
+
+if not os.path.exists(filename):
+  print("Downloading text8...")
+  urllib.request.urlretrieve(url, filename)
+
+# Extract the dataset
+with zipfile.ZipFile(filename) as f:
+  text = f.read(f.namelist()[0]).decode('utf-8')
+
+print(f"First 300 characters:\n{text[:300]}")
+```
+
+    Downloading text8...
+    First 300 characters:
+     anarchism originated as a term of abuse first used against early working class radicals including the diggers of the english revolution and the sans culottes of the french revolution whilst the term is still used in a pejorative way to describe any act that used violent means to destroy the organiz
+
+
+---
+
+### Subsample tokens
+
+
+```python
+from collections import Counter
+import nltk
+from nltk.corpus import stopwords
+import random
+
+nltk.download('stopwords')
+
+def subsample_tokens(tokens, threshold=1e-5):
+  subsampled_tokens = []
+  word_counts = Counter(tokens)
+  total_counts  = sum(word_counts.values())
+
+  for token in tokens:
+    normalized_freq = word_counts[token]/total_counts
+    p_discard = 1 - (threshold/normalized_freq)**0.5
+
+    if random.random() > p_discard:
+      subsampled_tokens.append(token)
+
+  return subsampled_tokens
+
+# English stop words
+stop_words = set(stopwords.words('english'))
+
+# Building vocab
+tokens = text.split()
+print(f"Total tokens: {len(tokens)}")
+
+# Filter out stop words
+filtered_tokens = [token for token in tokens if token.lower().strip() not in stop_words]
+print(f"Total filtered tokens: {len(filtered_tokens)}")
+
+subsampled_tokens = subsample_tokens(filtered_tokens)
+print(f"Total subsampled tokens: {len(subsampled_tokens)}")
+
+word_freq =  Counter(subsampled_tokens)
+print(f"Unique words: {len(word_freq)}")
+
+vocab = {word:idx for idx, (word, _) in enumerate(word_freq.items())}
+
+inv_vocab = {idx:word for word, idx in vocab.items()}
+```
+
+    [nltk_data] Downloading package stopwords to /root/nltk_data...
+    [nltk_data]   Unzipping corpora/stopwords.zip.
+
+
+    Total tokens: 17005207
+    Total filtered tokens: 10890638
+    Total subsampled tokens: 4132620
+    Unique words: 253702
+
+
+---
+
+### Get most common words
+
+```python
+# Filter rare words
+vocab_size = 10000
+
+most_common = word_freq.most_common(vocab_size)#[:-1000-1:-1]
+vocab = {word:idx for idx, (word, _) in enumerate(most_common)}
+inv_vocab = {idx:word for word, idx in vocab.items()}
+print(f"Unique words: {len(vocab)}")
+
+# filter tokens to keep only those in vocab
+tokens = [token for token in tokens if token in vocab]
+print(f"Filtered tokens: {len(tokens)}")
+
+# filtered word freq
+filtered_word_freq = {word:freq for word, freq in most_common}
+print(f"Filtered word freq: {len(filtered_word_freq)}")
+```
+
+    Unique words: 10000
+    Filtered tokens: 9170278
+    Filtered word freq: 10000
+
+
+
+---
+
+### Function to generate training data indices
+
+```python
+import torch
+import random
+
+def generate_data_indices(tokens: list, vocab: dict, word_freq: dict,
+                          k=5, C=5, batch_size=32, max_data_points=None,
+                          device='cpu'):
+  """
+  Generate skip-gram with negative sampling data using PyTorch.
+
+  Args:
+      tokens (list): list of tokens (strings)
+      vocab (dict): mapping word -> index
+      word_freq (dict): mapping word -> frequency (for negative sampling)
+      k (int): number of negative samples
+      C (int): maximum window size
+      batch_size (int): batch size
+      max_data_points (int or None): maximum number of center-target pairs
+      device (str): 'cpu' or 'cuda'
+
+  Yields:
+      centers (Tensor): shape (B,)
+      targets (Tensor): shape (B,)
+      negatives (Tensor): shape (B, k)
+  """
+
+  vocab_size = len(vocab)
+  token_len = len(tokens)
+  batch = []
+  count = 0
+
+  # --- Build negative sampling distribution (unigram^0.75) ---
+  freqs = torch.tensor([word_freq[w] for w in vocab.keys()], dtype=torch.float32)
+  freqs = freqs ** 0.75
+  neg_sampling_dist = freqs / freqs.sum()
+
+  for idx, center_word in enumerate(tokens):
+    if max_data_points is not None and count >= max_data_points:
+        break
+
+    center_idx = vocab[center_word]
+
+    # dynamic window size (1..C)
+    window_size = random.randint(1, C)
+
+    for j in range(-window_size, window_size + 1):
+      if j == 0 or not (0 <= idx + j < token_len):
+        continue
+
+      target_word = tokens[idx + j]
+
+      target_idx = vocab[target_word]
+
+      # sample negatives using PyTorch multinomial
+      neg_samples = torch.multinomial(neg_sampling_dist, num_samples=k*2, replacement=True)
+
+      # remove true target if accidentally sampled
+      neg_samples = neg_samples[neg_samples != target_idx]
+      neg_samples = neg_samples[:k]  # take exactly k negatives
+
+      batch.append((center_idx, target_idx, neg_samples))
+      count += 1
+
+      if len(batch) == batch_size:
+        # convert batch to tensors
+        centers = torch.tensor([c for c, _, _ in batch], dtype=torch.long, device=device)
+        targets = torch.tensor([t for _, t, _ in batch], dtype=torch.long, device=device)
+        negatives = torch.stack([n for _, _, n in batch]).to(device)  # shape (B, k)
+
+        yield centers, targets, negatives
+        batch = []
+
+  # leftover batch
+  if batch:
+      centers = torch.tensor([c for c, _, _ in batch], dtype=torch.long, device=device)
+      targets = torch.tensor([t for _, t, _ in batch], dtype=torch.long, device=device)
+      negatives = torch.stack([n for _, _, n in batch]).to(device)
+      yield centers, targets, negatives
+
+```
+
+---
+
+### Negative sampling loss
+
+```python
+import torch.nn.functional as F
+def negative_sampling_loss(center_embeds, true_target_embeds, context_embeds):
+  """
+  center_embeds: (B, D) - embeddings of center words (from center embedding matrix)
+  true_target_embeds: (B, D) - embeddings of true context words (from context embedding matrix)
+  context_embeds: (B, K, D) - embedding of context or target words (from context embedding matrix)
+  K is the number of samples to be drawn for each center word
+  """
+
+  pos_logits =  torch.sum(center_embeds * true_target_embeds, dim=1) # (B,)
+  pos_loss = F.logsigmoid(pos_logits) # (B,)
+
+  neg_logits = torch.bmm(context_embeds, center_embeds.unsqueeze(2)).squeeze(2) # (B, K)
+  neg_loss = F.logsigmoid(-neg_logits).sum(dim=1) # (B,)
+
+  loss = -(pos_loss + neg_loss).mean()
+
+  return loss
+```
+
+---
+
+### Create the model 
+
+```python
+import torch
+import torch.nn as nn
+class Word2VecNS(nn.Module):
+  def __init__(self, vocab_size, embedding_dim):
+    super().__init__()
+
+    self.center_embedding = nn.Embedding(vocab_size, embedding_dim)
+    self.context_embedding = nn.Embedding(vocab_size, embedding_dim)
+
+  def forward(self, center_word_indices, true_target_indices, context_word_indices):
+    center_embeds = self.center_embedding(center_word_indices)
+    context_embeds = self.context_embedding(context_word_indices)
+    true_target_embeds = self.context_embedding(true_target_indices)
+    return center_embeds, true_target_embeds, context_embeds
+
+```
+
+---
+
+### Initialise the model
+
+```python
+model = Word2VecNS(vocab_size=len(vocab), embedding_dim=300)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model.to(device)
+```
+
+
+
+
+    Word2VecNS(
+      (center_embedding): Embedding(10000, 300)
+      (context_embedding): Embedding(10000, 300)
+    )
+
+
+
+---
+
+### Set up optimizer
+
+```python
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+```
+
+
+---
+
+### Train the model
+
+```python
+# Train the model
+
+epochs = 30
+model.train()
+for epoch in range(epochs):
+  running_loss = 0.0
+  batch_count = 0
+
+  data = generate_data_indices(tokens, vocab=vocab, word_freq=filtered_word_freq, k=5, C=5, batch_size=32, max_data_points=1_000_000, device=device)
+
+  for center_idxs, target_idxs, context_idxs in data:
+
+    center_idxs = center_idxs.to(device)
+    target_idxs = target_idxs.to(device)
+    context_idxs = context_idxs.to(device)
+
+    optimizer.zero_grad()
+
+    center_embeds, target_embeds, context_embeds = model(center_idxs, target_idxs, context_idxs)
+
+    loss = negative_sampling_loss(center_embeds, target_embeds, context_embeds)
+
+    loss.backward()
+
+    optimizer.step()
+
+    running_loss += loss.item()
+
+    batch_count += 1
+
+
+  print(f"Epoch {epoch+1} Loss: {running_loss/batch_count}")
+```
+
+    Epoch 1 Loss: 29.08660999885386
+    Epoch 2 Loss: 14.112728043267763
+    Epoch 3 Loss: 8.43846134388932
+    Epoch 4 Loss: 5.909612085083861
+    Epoch 5 Loss: 4.471298608461067
+    Epoch 6 Loss: 3.592523534725638
+    Epoch 7 Loss: 3.0125300137918036
+    Epoch 8 Loss: 2.634447143848733
+    Epoch 9 Loss: 2.389984536399262
+    Epoch 10 Loss: 2.204498428423895
+    Epoch 11 Loss: 2.083149959297092
+    Epoch 12 Loss: 1.9953826344771528
+    Epoch 13 Loss: 1.933586987579259
+    Epoch 14 Loss: 1.8866075099800248
+    Epoch 15 Loss: 1.8494391960373602
+    Epoch 16 Loss: 1.827853235629969
+    Epoch 17 Loss: 1.8115166856584173
+    Epoch 18 Loss: 1.7966397875170552
+    Epoch 19 Loss: 1.7863305828742684
+    Epoch 20 Loss: 1.7804902502636633
+    Epoch 21 Loss: 1.7809785443179702
+    Epoch 22 Loss: 1.770274683031227
+    Epoch 23 Loss: 1.7664639709183525
+    Epoch 24 Loss: 1.7617347584996523
+    Epoch 25 Loss: 1.7697679223510325
+    Epoch 26 Loss: 1.7629490103600323
+    Epoch 27 Loss: 1.7621526014777578
+    Epoch 28 Loss: 1.7617466407990152
+    Epoch 29 Loss: 1.762099759918562
+    Epoch 30 Loss: 1.759415338001871
+
+
+---
+
+### Test the model 
+
+```python
+# use model to predict next word
+def predict_next_topk_words(word_idx, model=model, topk=5):
+  topk_words = []
+  model.eval()
+  with torch.no_grad():
+    last_embedding = model.center_embedding(torch.tensor([word_idx]).to(device))  # shape: (1, D)
+
+    # Normalize embeddings to unit vectors
+    normalized_embeddings = F.normalize(model.center_embedding.weight, dim=1)
+    normalized_last = F.normalize(last_embedding, dim=1)
+
+    # Compute cosine similarity
+    cos_similarities = torch.matmul(normalized_last, normalized_embeddings.T).squeeze(0)
+
+    topk = torch.topk(cos_similarities, k=topk)
+    for i in topk.indices:
+      topk_words.append(inv_vocab[i.item()])  # Convert index back to word
+
+    return topk_words
+
+
+```
+
+
+```python
+last_word = "football"
+last_word_idx = vocab[last_word]
+
+predictions = predict_next_topk_words(last_word_idx, topk=10)
+print(predictions)
+```
+
+    ['football', 'league', 'game', 'nfl', 'american', 'rugby', 'played', 'sport', 'players', 'sports']
+
+
+
+```python
+
+```
