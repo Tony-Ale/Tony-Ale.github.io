@@ -1,0 +1,154 @@
+[data-theme="dark"] {
+  --main-color: #eaeaea;
+  --bg-color: #121212;
+  --bg-container: #1e1e1e;
+  --bg-shadow: rgba(0, 255, 170, 0.5);
+  --green-color: #00ffaa;
+  --orange-color: #ff8c00;
+  --white-color: white;
+}
+
+[data-theme="light"] {
+  --main-color: black;
+  --bg-color: white;
+  --bg-container: white;
+  --bg-shadow: rgba(0, 255, 170, 0.5);
+  --green-color: black;
+  --orange-color: grey;
+  --white-color: black;
+}
+
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Courier New", Courier, monospace;
+  color: var(--main-color);
+}
+
+/* Body Style */
+body {
+  background-color: var(--bg-color);
+  line-height: 1.6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+/* Container */
+.container {
+  max-width: 800px;
+  padding: 20px;
+  background: var(--bg-container);
+  border-radius: 10px;
+  box-shadow: 0 0 15px var(--bg-shadow);
+}
+
+/* Header */
+h1,
+h2,
+p {
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+  color: var(--green-color);
+}
+
+/* Styling for the navbar */
+.navbar {
+  display: flex;
+  list-style-type: none;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar li {
+  margin: 0 15px;
+}
+
+.navbar a {
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.navbar a:hover {
+  color: var(--orange-color);
+  text-decoration: underline;
+}
+
+/* Styling for the horizontal line */
+hr {
+  border: none;
+  border-top: 1px solid;
+  margin: 10px 0;
+}
+
+/* Section Styling */
+section {
+  margin: 20px 0;
+  padding: 15px;
+  border-left: 5px solid var(--green-color);
+}
+
+/* About Section */
+#about p {
+  font-size: 1.1em;
+  line-height: 1.8;
+}
+
+/* Project List */
+#projects ul {
+  list-style-type: square;
+  margin-top: 10px;
+}
+
+#projects ul li {
+  margin: 8px 0;
+  font-size: 1.05em;
+}
+
+#projects a {
+  text-decoration: none;
+}
+
+#projects a:hover {
+  color: var(--orange-color);
+}
+
+/* Blog Links */
+#blogs a {
+  text-decoration: none;
+  color: var(--green-color);
+}
+
+#blogs a:hover {
+  text-decoration: underline;
+  color: var(--orange-color);
+}
+
+#other-posts {
+  text-align: left;
+}
+
+#other-posts a {
+  color: var(--white-color);
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 0.9em;
+}
+
+/* Hover Effect */
+a {
+  transition: color 0.3s ease;
+}
