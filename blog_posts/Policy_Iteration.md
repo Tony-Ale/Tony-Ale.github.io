@@ -75,6 +75,28 @@ This process repeats until the difference between old and new state values is ve
 
 If the policy were stochastic (probabilistic), $\pi(a|s)$ would be less than 1 for most actions. In that case, we would compute the expected value over all possible actions weighted by their probabilities: Effectively, this averages the resulting values according to the probabilities of the actions, rather than picking a single action.
 
+### Policy Evaluation (Iterative Algorithm)
+
+**Input:** $ \pi $ (the policy to be evaluated)  
+**Parameter:** $ \theta > 0 $ (a small threshold determining accuracy of estimation)  
+
+**Initialize** $ V(s) $ arbitrarily for all $ s \in S $, except that $ V(\text{terminal}) = 0 $  
+
+**Loop:**  
+&emsp;$ \Delta \leftarrow 0 $  
+&emsp;**For each** state $ s \in S $:  
+&emsp;&emsp;$ v \leftarrow V(s) $  
+
+&emsp;&emsp;$
+V(s) \leftarrow \sum_{a} \pi(a|s) 
+\sum_{s', r} p(s', r \mid s, a) 
+\big[ r + \gamma V(s') \big]
+$
+
+&emsp;&emsp;$ \Delta \leftarrow \max(\Delta, |v - V(s)|) $  
+&emsp;**End For**  
+**until** $ \Delta < \theta $
+
 ---
 
 ## Policy Iteration
