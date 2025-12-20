@@ -56,9 +56,9 @@ $$
    * Choose action $ A $ from $ S $ using a policy derived from $ Q $ (e.g., $ \epsilon $ -greedy)
    * Take action $ A $, observe reward $ R $ and next state $ S' $
    * Update:
-     $$
+     $
      Q(S, A) \leftarrow Q(S, A) + \alpha \big[ R + \gamma \max_a Q(S', a) - Q(S, A) \big]
-     $$
+     $
    * Set $ S \leftarrow S' $
 3. Repeat until $ S $ is terminal
 
@@ -93,13 +93,13 @@ Instead of using a single Q-function to both select and evaluate actions, two in
    * Choose action $ A $ using an $ \epsilon $-greedy policy over $ Q_1 + Q_2 $
    * Take action $ A $, observe reward $ R $ and next state ( S' )
    * With probability 0.5:
-     $$
+     $
      Q_1(S, A) \leftarrow Q_1(S, A) + \alpha \big[ R + \gamma Q_2(S', \arg\max_a Q_1(S', a)) - Q_1(S, A) \big]
-     $$
+     $
    * Otherwise:
-     $$
+     $
      Q_2(S, A) \leftarrow Q_2(S, A) + \alpha \big[ R + \gamma Q_1(S', \arg\max_a Q_2(S', a)) - Q_2(S, A) \big]
-     $$
+     $
    * Set $ S \leftarrow S' $
 3. Repeat until terminal state
 
@@ -126,9 +126,9 @@ For episode $= 1$ to $M$ do
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;With probability $\epsilon$, select a random action $a_t$  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Otherwise, select  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$$
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$
 a_t = \arg\max_a Q(s_t, a; \theta)
-$$
+$
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Execute action $a_t$ in the environment  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Observe reward $r_t$, next state $s_{t+1}$, and done flag  
@@ -138,24 +138,24 @@ $$
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample a random minibatch of transitions $(s_j, a_j, r_j, s_{j+1})$ from $D$  
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For each sampled transition, set target value  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$$
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$
 y_j =
 \begin{cases}
 r_j, & \text{if } s_{j+1} \text{ is terminal      else}\\
 r_j + \gamma \max_{a'} \hat{Q}(s_{j+1}, a'; \theta^-)
 \end{cases}
-$$
+$
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Perform a gradient descent step on the loss  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$$
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$
 \left(y_j - Q(s_j, a_j; \theta)\right)^2
-$$  
+$ 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with respect to the network parameters $\theta$  
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Every $C$ steps, update the target network  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$$
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$
 \theta^- \leftarrow \theta
-$$
+$
 
 &nbsp;&nbsp;&nbsp;&nbsp;End For  
 
@@ -164,7 +164,7 @@ End For
 ---
 You can explore the code here:
 
-- 📘 <a href="https://github.com/Tony-Ale/RL/blob/master/dqn_from_scratch/dqn.py" target="_blank">View on GitHub</a> 
+- 📘 <a href="https://github.com/Tony-Ale/RL/tree/master/dqn_from_scratch" target="_blank">View on GitHub</a> 
 
 **DQN on Cartpole**
 
@@ -255,4 +255,4 @@ Finally, the mean Q-value plot for DQN with dueling shows the Q-values gradually
 
 You can explore the code here:
 
-- 📘 <a href="https://github.com/Tony-Ale/RL/blob/master/dqn_from_scratch/dqn.py" target="_blank">View on GitHub</a> 
+- 📘 <a href="https://github.com/Tony-Ale/RL/tree/master/dqn_from_scratch" target="_blank">View on GitHub</a> 
